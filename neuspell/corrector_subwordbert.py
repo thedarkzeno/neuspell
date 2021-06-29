@@ -203,7 +203,7 @@ class BertChecker(Corrector):
                     # scheduler.step()
                     optimizer.zero_grad()
                 # compute accuracy in numpy
-                if batch_id % 10000 == 0:
+                if batch_id % 1000 == 0:
                     train_acc_count += 1
                     model.eval()
                     with torch.no_grad():
