@@ -73,8 +73,10 @@ class BertChecker(Corrector):
                  clean_file,
                  corrupt_file,
                  data_dir="",
-                 validation_split=0.2,
+                 validation_split=0.1,
                  n_epochs=2,
+                 train_batch_size=8,
+                 validation_batch_size=16,  
                  new_vocab_list: List = None):
 
         if new_vocab_list:
@@ -84,7 +86,7 @@ class BertChecker(Corrector):
         # load data and split in train-validation
         data_dir = DEFAULT_TRAINTEST_DATA_PATH if data_dir == "default" else data_dir
         train_data = load_data(data_dir, clean_file, corrupt_file)
-        train_data, valid_data = train_validation_split(train_data, 0.8, seed=11690)
+        train_data, valid_data = train_validation_split(train_data, 1 - validation_split, seed=11690)
         print("len of train and test data: ", len(train_data), len(valid_data))
 
         # load vocab and model
@@ -95,7 +97,7 @@ class BertChecker(Corrector):
         # training and validation
         #############################################
         model, vocab = self.model, self.vocab
-        TRAIN_BATCH_SIZE, VALID_BATCH_SIZE = 16, 32
+        TRAIN_BATCH_SIZE, VALID_BATCH_SIZE = train_batch_size, validation_batch_size
         GRADIENT_ACC = 4
         DEVICE = self.device
         START_EPOCH, N_EPOCHS = 0, n_epochs
